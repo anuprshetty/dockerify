@@ -1,0 +1,47 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+
+  // Available variables which can be used inside of strings.
+  // $(workspaceRoot): the project root folder
+  // $(file): the current opened file
+  // $(fileDirname): the current opened file's dirname
+  // ${fileBasename): the current opened file's basename
+  // $(fileExtname): the current opened file's extension
+  // $(cwd): the current working directory of the spawned process
+
+  "version": "2.0.0",
+  "type": "shell",
+  "presentation": {
+    "reveal": "always",
+    "panel": "dedicated", // options: 'dedicated', 'shared'
+    "showReuseMessage": false // Controls whether to show the "Terminal will be reused by tasks, press any key to close it" message.
+  },
+
+  "tasks": [
+    {
+      "label": "noobie->prerequisites->npm_install",
+      "command": "npm install"
+    },
+    {
+      "label": "noobie->prerequisites->npm_cleanup",
+      "command": "rm -rf node_modules && rm -f package-lock.json"
+    },
+    {
+      "label": "noobie->run_on->docker_compose->up",
+      "command": "docker compose up --build --detach"
+    },
+    {
+      "label": "noobie->run_on->docker_compose->down",
+      "command": "docker compose down"
+    },
+    {
+      "label": "noobie->run_on->docker_compose->logs",
+      "command": "docker compose logs --timestamps --follow"
+    },
+    {
+      "label": "noobie->run_on->local",
+      "command": "npm start"
+    }
+  ]
+}
