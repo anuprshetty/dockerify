@@ -1,0 +1,11 @@
+version: "3" # Version of docker-compose
+
+services:
+  redis-server:
+    build: .
+    image: redis-server-image:latest
+    container_name: redis-server-container
+    hostname: redis-server
+    restart: "no"
+    ports:
+      - "6380:6379"
