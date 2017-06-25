@@ -1,0 +1,25 @@
+version: "3" # Version of docker-compose
+
+services:
+  redis-server:
+    build: ./redis_server
+    image: redis-server-image:latest
+    container_name: redis-server-container
+    hostname: redis-server
+    restart: "no"
+
+  web-visits:
+    build: .
+    image: web-visits-image:latest
+    container_name: web-visits-container
+    hostname: web-visits
+    restart: "no"
+    environment:
+      - APP_PORT=3000
+
+      - REDIS_SERVER_HOST=redis-server
+      - REDIS_SERVER_PORT=6379
+    ports:
+      - "3000:3000"
+    depends_on:
+      - redis-server
