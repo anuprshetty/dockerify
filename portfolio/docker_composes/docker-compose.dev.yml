@@ -1,0 +1,19 @@
+version: "3" # version of docker compose
+
+services:
+  portfolio:
+    build:
+      context: ..
+      dockerfile: docker_files/dev.Dockerfile
+    image: portfolio-image:latest
+    container_name: portfolio-container
+    hostname: portfolio
+    restart: "no"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../public:/developer/projects/portfolio/public
+      - ../src:/developer/projects/portfolio/src
