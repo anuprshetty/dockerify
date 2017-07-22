@@ -1,0 +1,26 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "web_visits->with_redis_server_on->docker_compose",
+      "program": "${workspaceFolder}/index.js",
+      // "console": "integratedTerminal", // Uncomment this if you want to pass ctrl+C (SIGINT) to the debugee process.
+      "preLaunchTask": "atomic_tasks->redis_server->run_on->docker_compose->up",
+      "postDebugTask": "atomic_tasks->redis_server->run_on->docker_compose->down"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "web_visits->with_redis_server_on->local",
+      "program": "${workspaceFolder}/index.js",
+      // "console": "integratedTerminal", // Uncomment this if you want to pass ctrl+C (SIGINT) to the debugee process.
+      "preLaunchTask": "atomic_tasks->redis_server->run_on->local->start",
+      "postDebugTask": "atomic_tasks->redis_server->run_on->local->stop"
+    }
+  ]
+}
