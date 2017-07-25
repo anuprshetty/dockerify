@@ -7,12 +7,14 @@ services:
     container_name: redis-server-container
     hostname: redis-server
     restart: "no"
+    ports:
+      - "6380:6379"
 
-  web-visits:
-    build: .
-    image: web-visits-image:latest
-    container_name: web-visits-container
-    hostname: web-visits
+  app:
+    build: ./app
+    image: app-image:latest
+    container_name: app-container
+    hostname: app
     restart: "no"
     environment:
       - APP_PORT=3000
