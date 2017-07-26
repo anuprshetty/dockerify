@@ -3,7 +3,7 @@
   // for the documentation about the tasks.json format
 
   // Available variables which can be used inside of strings.
-  // $(workspaceRoot): the project root folder
+  // $(workspaceFolder): the project root folder
   // $(file): the current opened file
   // $(fileDirname): the current opened file's dirname
   // ${fileBasename): the current opened file's basename
@@ -20,66 +20,6 @@
 
   "tasks": [
     {
-      "label": "atomic_tasks->npm->start",
-      "command": "npm start"
-    },
-    {
-      "label": "redis_server->run_on->docker_compose->up",
-      "command": "cd ${workspaceFolder}/redis_server && docker compose up --build --detach"
-    },
-    {
-      "label": "redis_server->run_on->docker_compose->down",
-      "command": "cd ${workspaceFolder}/redis_server && docker compose down"
-    },
-    {
-      "label": "redis_server->run_on->docker_compose->logs",
-      "command": "cd ${workspaceFolder}/redis_server && docker compose logs --timestamps --follow"
-    },
-    {
-      "label": "atomic_tasks->redis_server->run_on->local->start",
-      "command": "brew services start redis"
-    },
-    {
-      "label": "atomic_tasks->redis_server->run_on->local->stop",
-      "command": "brew services stop redis"
-    },
-    {
-      "label": "atomic_tasks->redis_server->run_on->local->start_info",
-      "command": "brew services info redis"
-    },
-    {
-      "label": "atomic_tasks->redis_server->run_on->local->stop_info",
-      "command": "brew services info redis"
-    },
-    {
-      "label": "redis_server->run_on->local->info",
-      "command": "brew services info redis"
-    },
-    {
-      "label": "redis_server->run_on->local->start",
-      "dependsOrder": "sequence", // by default, "parallel"
-      "dependsOn": [
-        "atomic_tasks->redis_server->run_on->local->start",
-        "atomic_tasks->redis_server->run_on->local->start_info"
-      ]
-    },
-    {
-      "label": "redis_server->run_on->local->stop",
-      "dependsOrder": "sequence", // by default, "parallel"
-      "dependsOn": [
-        "atomic_tasks->redis_server->run_on->local->stop",
-        "atomic_tasks->redis_server->run_on->local->stop_info"
-      ]
-    },
-    {
-      "label": "web_visits->prerequisites->npm_install",
-      "command": "npm install"
-    },
-    {
-      "label": "web_visits->prerequisites->npm_cleanup",
-      "command": "rm -rf node_modules && rm -f package-lock.json"
-    },
-    {
       "label": "web_visits->run_on->docker_compose->up",
       "command": "docker compose up --build --detach"
     },
@@ -92,21 +32,65 @@
       "command": "docker compose logs --timestamps --follow"
     },
     {
+      "label": "atomic_tasks->app->npm->start",
+      "command": "cd ${workspaceFolder}/app && npm start"
+    },
+    {
+      "label": "atomic_tasks->redis_server->run_on->docker_compose->up",
+      "command": "cd ${workspaceFolder}/redis_server && docker compose up --build --detach"
+    },
+    {
+      "label": "atomic_tasks->redis_server->run_on->docker_compose->down",
+      "command": "cd ${workspaceFolder}/redis_server && docker compose down"
+    },
+    {
+      "label": "atomic_tasks->atomic_tasks->redis_server->run_on->local->start",
+      "command": "brew services start redis"
+    },
+    {
+      "label": "atomic_tasks->atomic_tasks->redis_server->run_on->local->stop",
+      "command": "brew services stop redis"
+    },
+    {
+      "label": "atomic_tasks->atomic_tasks->redis_server->run_on->local->start_info",
+      "command": "brew services info redis"
+    },
+    {
+      "label": "atomic_tasks->atomic_tasks->redis_server->run_on->local->stop_info",
+      "command": "brew services info redis"
+    },
+    {
+      "label": "atomic_tasks->redis_server->run_on->local->start",
+      "dependsOrder": "sequence", // by default, "parallel"
+      "dependsOn": [
+        "atomic_tasks->atomic_tasks->redis_server->run_on->local->start",
+        "atomic_tasks->atomic_tasks->redis_server->run_on->local->start_info"
+      ]
+    },
+    {
+      "label": "atomic_tasks->redis_server->run_on->local->stop",
+      "dependsOrder": "sequence", // by default, "parallel"
+      "dependsOn": [
+        "atomic_tasks->atomic_tasks->redis_server->run_on->local->stop",
+        "atomic_tasks->atomic_tasks->redis_server->run_on->local->stop_info"
+      ]
+    },
+    {
       "label": "web_visits->run_on->local->with_redis_server_on->local",
       "dependsOrder": "sequence", // by default, "parallel"
       "dependsOn": [
-        "redis_server->run_on->local->start",
-        "atomic_tasks->npm->start",
-        "redis_server->run_on->local->stop"
+        "atomic_tasks->redis_server->run_on->local->start",
+        "atomic_tasks->app->npm->start",
+        "atomic_tasks->redis_server->run_on->local->stop"
       ]
     },
     {
       "label": "web_visits->run_on->local->with_redis_server_on->docker_compose",
       "dependsOrder": "sequence", // by default, "parallel"
       "dependsOn": [
-        "redis_server->run_on->docker_compose->up",
-        "atomic_tasks->npm->start",
-        "redis_server->run_on->docker_compose->down"
+        "atomic_tasks->redis_server->run_on->docker_compose->up",
+        "atomic_tasks->app->npm->start",
+        "atomic_tasks->redis_server->run_on->docker_compose->down"
       ]
     }
   ]
