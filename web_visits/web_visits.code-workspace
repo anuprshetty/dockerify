@@ -1,0 +1,14 @@
+{
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "app"
+    },
+    {
+      "path": "redis_server"
+    }
+  ],
+  "settings": {}
+}

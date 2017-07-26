@@ -7,8 +7,9 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "web_visits->with_redis_server_on->docker_compose",
+      "name": "web_visits->debug_on->local->with_redis_server_on->docker_compose",
       "program": "${workspaceFolder}/index.js",
+      "args": ["--watch"],
       // "console": "integratedTerminal", // Uncomment this if you want to pass ctrl+C (SIGINT) to the debugee process.
       "preLaunchTask": "atomic_tasks->redis_server->run_on->docker_compose->up",
       "postDebugTask": "atomic_tasks->redis_server->run_on->docker_compose->down"
@@ -16,11 +17,26 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "web_visits->with_redis_server_on->local",
+      "name": "web_visits->debug_on->local->with_redis_server_on->local",
       "program": "${workspaceFolder}/index.js",
+      "args": ["--watch"],
       // "console": "integratedTerminal", // Uncomment this if you want to pass ctrl+C (SIGINT) to the debugee process.
       "preLaunchTask": "atomic_tasks->redis_server->run_on->local->start",
       "postDebugTask": "atomic_tasks->redis_server->run_on->local->stop"
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "web_visits->attach_debugger_for->app_process->on->docker_compose",
+      "port": 9229, // when a node.js script is started with --inspect switch, that node.js process listens for a debugging client (which in this case, VS code). By default, the node.js process listens at host and port 127.0.0.1:9229. So here in this configuration, we have mentioned that port to connect to that node.js process's debugging server.
+      "restart": true // while debugging, if you make any changes to the source code, VS code will restart the debugging session.
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "web_visits->attach_debugger_for->app_process->on->local",
+      "processId": "${command:PickProcess}", // when this debugging session is initialized, VS code prompts for all the running node.js processes from which user has to select one. Then VS code will attach the debugger to that selected node.js process.
+      "restart": true
     }
   ]
 }

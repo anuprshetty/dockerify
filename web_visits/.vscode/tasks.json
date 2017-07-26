@@ -32,8 +32,8 @@
       "command": "docker compose logs --timestamps --follow"
     },
     {
-      "label": "atomic_tasks->app->npm->start",
-      "command": "cd ${workspaceFolder}/app && npm start"
+      "label": "atomic_tasks->app->npm->debug",
+      "command": "open http://localhost:3000 && cd ${workspaceFolder}/app && npm run debug"
     },
     {
       "label": "atomic_tasks->redis_server->run_on->docker_compose->up",
@@ -80,7 +80,7 @@
       "dependsOrder": "sequence", // by default, "parallel"
       "dependsOn": [
         "atomic_tasks->redis_server->run_on->local->start",
-        "atomic_tasks->app->npm->start",
+        "atomic_tasks->app->npm->debug",
         "atomic_tasks->redis_server->run_on->local->stop"
       ]
     },
@@ -89,7 +89,7 @@
       "dependsOrder": "sequence", // by default, "parallel"
       "dependsOn": [
         "atomic_tasks->redis_server->run_on->docker_compose->up",
-        "atomic_tasks->app->npm->start",
+        "atomic_tasks->app->npm->debug",
         "atomic_tasks->redis_server->run_on->docker_compose->down"
       ]
     }

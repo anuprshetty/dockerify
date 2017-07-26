@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:18-alpine
 
 ARG PROJECT_ROOT_FOLDER=app
 
@@ -12,4 +12,4 @@ RUN npm install
 
 EXPOSE 3000
 
-CMD npm start
+CMD npm run debug
