@@ -51,7 +51,7 @@
     },
     {
       "label": "portfolio->run_on->local->on_env->prod",
-      "command": "serve --listen tcp://0.0.0.0:8080 --no-port-switching --single --debug build",
+      "command": "serve --listen tcp://127.0.0.1:8080 --no-port-switching --single --debug build",
       "dependsOrder": "sequence",
       "dependsOn": ["portfolio->build"]
     },
