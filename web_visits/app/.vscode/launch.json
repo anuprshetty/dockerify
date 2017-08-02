@@ -21,7 +21,7 @@
       "program": "${workspaceFolder}/index.js",
       "args": ["--watch"],
       // "console": "integratedTerminal", // Uncomment this if you want to pass ctrl+C (SIGINT) to the debugee process.
-      "preLaunchTask": "atomic_tasks->redis_server->run_on->local->start",
+      "preLaunchTask": "atomic_tasks->redis_server->run_on->local->run",
       "postDebugTask": "atomic_tasks->redis_server->run_on->local->stop"
     },
     {

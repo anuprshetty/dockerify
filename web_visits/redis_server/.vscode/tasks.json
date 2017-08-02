@@ -32,15 +32,15 @@
       "command": "docker compose logs --timestamps --follow"
     },
     {
-      "label": "atomic_tasks->redis_server->run_on->local->start",
-      "command": "brew services start redis"
+      "label": "atomic_tasks->redis_server->run_on->local->run",
+      "command": "brew services run redis"
     },
     {
       "label": "atomic_tasks->redis_server->run_on->local->stop",
       "command": "brew services stop redis"
     },
     {
-      "label": "atomic_tasks->redis_server->run_on->local->start_info",
+      "label": "atomic_tasks->redis_server->run_on->local->run_info",
       "command": "brew services info redis"
     },
     {
@@ -52,11 +52,11 @@
       "command": "brew services info redis"
     },
     {
-      "label": "redis_server->run_on->local->start",
+      "label": "redis_server->run_on->local->run",
       "dependsOrder": "sequence", // by default, "parallel"
       "dependsOn": [
-        "atomic_tasks->redis_server->run_on->local->start",
-        "atomic_tasks->redis_server->run_on->local->start_info"
+        "atomic_tasks->redis_server->run_on->local->run",
+        "atomic_tasks->redis_server->run_on->local->run_info"
       ]
     },
     {
