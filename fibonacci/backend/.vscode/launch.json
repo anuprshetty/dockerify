@@ -1,0 +1,15 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "fibonacci->attach_debugger_for->backend_process->running_on->docker_compose->on_env->dev",
+      "port": 9229, // when a node.js script is started with --inspect switch, that node.js process listens for a debugging client (which in this case, VS code). By default, the node.js process listens at host and port 127.0.0.1:9229. So here in this configuration, we have mentioned that port to connect to that node.js process's debugging server.
+      "restart": true // while debugging, if you make any changes to the source code, VS code will restart the debugging session.
+    }
+  ]
+}
