@@ -1,0 +1,15 @@
+.navbar {
+  background: darkcyan;
+  padding: 10px;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+}
+
+.nav-item {
+  margin: 0 10px;
+  font-size: x-large;
+}
