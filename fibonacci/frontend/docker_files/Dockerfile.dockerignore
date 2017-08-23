@@ -1,0 +1,6 @@
+.DS_Store
+.env
+README.md
+node_modules/
+build/
+coverage/
