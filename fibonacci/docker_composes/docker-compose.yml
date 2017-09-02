@@ -1,0 +1,92 @@
+version: "3" # Version of docker-compose
+
+services:
+  redis-server:
+    build: ../redis_server
+    image: redis-server-image:latest
+    container_name: redis-server-container
+    hostname: redis-server
+    restart: "no"
+    ports:
+      - "6380:6379"
+
+  worker:
+    build:
+      context: ../worker
+      dockerfile: docker_files/Dockerfile
+    image: worker-image:latest
+    container_name: worker-container
+    hostname: worker
+    restart: "no"
+    environment:
+      - REDIS_SERVER_HOST=redis-server
+      - REDIS_SERVER_PORT=6379
+    ports:
+      - "4000:4000"
+    depends_on:
+      - redis-server
+
+  postgres-server:
+    image: "postgres:latest"
+    container_name: postgres-server-container
+    restart: "no"
+    environment:
+      POSTGRES_USER: backend
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fib
+    #    expose:
+    #      - 5432
+    ports:
+      - "5433:5432"
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: docker_files/Dockerfile
+    image: backend-image:latest
+    container_name: backend-container
+    hostname: backend
+    restart: "no"
+    environment:
+      - APP_PORT=5000
+
+      - POSTGRES_HOST=postgres-server
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=backend
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=fib
+
+      - REDIS_SERVER_HOST=redis-server
+      - REDIS_SERVER_PORT=6379
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres-server
+      - redis-server
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: docker_files/Dockerfile
+    image: frontend-image:latest
+    container_name: frontend-container
+    hostname: frontend
+    restart: "no"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  reverse_proxy:
+    build:
+      context: ../reverse_proxy
+      dockerfile: docker_files/Dockerfile
+    image: reverse-proxy-image:latest
+    container_name: reverse-proxy-container
+    hostname: reverse_proxy
+    restart: "no"
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+      - frontend

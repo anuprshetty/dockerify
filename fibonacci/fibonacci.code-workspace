@@ -1,0 +1,23 @@
+{
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "redis_server"
+    },
+    {
+      "path": "worker"
+    },
+    {
+      "path": "backend"
+    },
+    {
+      "path": "frontend"
+    },
+    {
+      "path": "reverse_proxy"
+    }
+  ],
+  "settings": {}
+}
