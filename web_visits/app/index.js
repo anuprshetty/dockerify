@@ -28,7 +28,7 @@ app.get("/", async (req, res) => {
 const stopServer = async (event) => {
   console.log(`Stopping the server due to the event "${event}" ...`);
 
-  await redis_client.del("visits");
+  await redis_client.flushAll();
   console.log("Cleaned up Redis data");
 
   redis_client.quit();
