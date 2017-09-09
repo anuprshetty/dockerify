@@ -12,8 +12,6 @@ COPY .. .
 
 RUN npm install
 
-EXPOSE 3000
-
 RUN chmod 755 ./scripts/dev.sh
 
 CMD ./scripts/dev.sh
