@@ -7,7 +7,7 @@ echo "Current working directory: $(pwd)"
 
 chmod 755 ./scripts/wait-for-it.sh
 
-./scripts/wait-for-it.sh --host=postgres-server --port=5432 --strict --timeout=0 -- echo 'postgres-server is ready'
-./scripts/wait-for-it.sh --host=redis-server --port=6379 --strict --timeout=0 -- echo 'redis-server is ready'
+./scripts/wait-for-it.sh --host="$POSTGRES_HOST" --port=$POSTGRES_PORT --strict --timeout=0 -- echo 'postgres-server is ready'
+./scripts/wait-for-it.sh --host="$REDIS_SERVER_HOST" --port=$REDIS_SERVER_PORT --strict --timeout=0 -- echo 'redis-server is ready'
 
 npm run debug
