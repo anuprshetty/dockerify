@@ -7,6 +7,6 @@ echo "Current working directory: $(pwd)"
 
 chmod 755 ./scripts/wait-for-it.sh
 
-./scripts/wait-for-it.sh --host=backend --port=5000 --strict --timeout=0 -- echo 'backend is ready'
+./scripts/wait-for-it.sh --host="$BACKEND_HOST" --port=$BACKEND_PORT --strict --timeout=0 -- echo 'backend is ready'
 
 npm run debug
