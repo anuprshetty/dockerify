@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-server-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      fibonacci: postgres-server
+  template:
+    metadata:
+      labels:
+        fibonacci: postgres-server
+    spec:
+      volumes:
+        - name: postgres-server-volume
+          persistentVolumeClaim:
+            claimName: postgres-server-persistent-volume-claim
+      containers:
+        - name: postgres-server-container
+          image: anuprshetty/fibonacci-postgres-server-image
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-server-volume
+              mountPath: /var/lib/postgresql/data
+              subPath: postgresql/data
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-server-secret
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-server-secret
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-server-secret
+                  key: POSTGRES_DB

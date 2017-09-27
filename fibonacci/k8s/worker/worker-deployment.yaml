@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      fibonacci: worker
+  template:
+    metadata:
+      labels:
+        fibonacci: worker
+    spec:
+      containers:
+        - name: worker-container
+          image: anuprshetty/fibonacci-worker-image
+          env:
+            - name: REDIS_SERVER_HOST
+              value: redis-server-service-cluster-ip
+            - name: REDIS_SERVER_PORT
+              value: "6379"

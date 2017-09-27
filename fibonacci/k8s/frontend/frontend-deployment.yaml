@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      fibonacci: frontend
+  template:
+    metadata:
+      labels:
+        fibonacci: frontend
+    spec:
+      containers:
+        - name: frontend-container
+          image: anuprshetty/fibonacci-frontend-image
+          ports:
+            - containerPort: 3000
+          env:
+            - name: BACKEND_HOST
+              value: backend-service-cluster-ip
+            - name: BACKEND_PORT
+              value: "5000"

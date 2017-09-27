@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-server-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      fibonacci: redis-server
+  template:
+    metadata:
+      labels:
+        fibonacci: redis-server
+    spec:
+      containers:
+        - name: redis-server-container
+          image: anuprshetty/fibonacci-redis-server-image
+          ports:
+            - containerPort: 6379

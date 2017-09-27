@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      fibonacci: backend
+  template:
+    metadata:
+      labels:
+        fibonacci: backend
+    spec:
+      containers:
+        - name: backend-container
+          image: anuprshetty/fibonacci-backend-image
+          ports:
+            - containerPort: 5000
+          env:
+            - name: APP_PORT
+              value: "5000"
+
+            - name: POSTGRES_HOST
+              value: postgres-server-service-cluster-ip
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-server-secret
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-server-secret
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-server-secret
+                  key: POSTGRES_DB
+
+            - name: REDIS_SERVER_HOST
+              value: redis-server-service-cluster-ip
+            - name: REDIS_SERVER_PORT
+              value: "6379"
