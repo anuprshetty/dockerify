@@ -23,8 +23,8 @@ spec:
             - containerPort: 5432
           volumeMounts:
             - name: postgres-server-volume
-              mountPath: /var/lib/postgresql/data
-              subPath: postgresql/data
+              mountPath: /var/lib/postgresql/data # the path within the container where the volume content will be mounted.
+              subPath: postgresql/data # subdirectory within the volume to be mounted inside the container.
           env:
             - name: POSTGRES_USER
               valueFrom:

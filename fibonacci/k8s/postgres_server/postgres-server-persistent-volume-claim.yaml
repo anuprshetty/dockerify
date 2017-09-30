@@ -1,10 +1,60 @@
+# Flow of different storages in kubernetes:
+# container (On-disk files) -- mount_volumes_of_pod --> Pod (Ephemeral Volumes) -- claim_persistent_volumes -- using --> PersistentVolumeClaim object -- claim --> PersistentVolume object -- create_using --> StorageClass object -- actual_storage_backed_by --> actual storage backends (local, remote, cloud, etc).
+
+# StorageClass object in kubernetes:
+# - Here cluster administrator manually creates StorageClass object by mainly specifying who is the backend storage provisioner, accessModes, reclaimPolicy.
+# - So this StorageClass object is the backbone for creating Persistent Volumes.
+# - These will be always a default StorageClass object in a cluster. So while creating Persistent Volumes, if no StorageClass object is specified, then default StorageClass object is used.
+
+# Different storages in Kubernetes:
+#
+# 1. On-disk files in a container:
+# - This is the actual file system allocated to each container in a pod.
+# - By default, when a container crashes, the entire pod is restarted/recreated.
+# - This storage is ephemeral (lasting for a very short time). The lifetime of this storage is subject to lifecycle of a container. That means when a container restarts, the contents of this storage is gone and new storage is created.
+#
+# 2. Volumes: Volumes has 2 types --> Ephemeral Volumes and Persistent Volumes.
+# - Volume is the abstraction created by kubernetes which abstracts underlying backend storage details. User don't know where the actual storage is coming from. They just see that as volume.
+# - backend storages examples: local, remote, cloud etc. (kubernetes has different storage provisioners).
+# - Each volume has something called accessModes: Options are ReadWriteOnce, ReadOnlyMany, ReadWriteMany.
+# - Each volume has something called reclaimPolicy: Options are delete (by default), retain.
+#
+# 2.1. Ephemeral Volumes:
+# - This storage is ephemeral (lasting for a very short time). The lifetime of this storage is subject to lifecycle of a Pod. That means when a Pod restarts, the contents of this storage is gone and new storage is created.
+# - Examples: ConfigMaps (can contain string literals, files as values), Secrets (can contain string literals, files as values), etc. as Ephemeral Volumes.
+# - Ephemeral volumes are specified inline in the Pod spec, which simplifies application deployment and management.
+#
+# 2.2. Persistent Volumes:
+# - A pod claims a Persistent Volume using PersistentVolumeClaim object.
+# - So basically Persistent Volumes lifetime will be EITHER lifecycle of cluster (when local cluster storage(cluster nodes storage) is used) OR beyond lifecycle of cluster (when remote or cloud storage is used).
+# - Persistent volumes can be created in 2 ways.
+#
+# a. Statically using PersistentVolume object:
+# -- Here cluster administrator manually creates PersistentVolume object by mainly specifying StorageClass object name, how much storage should be allocated for this persistent volume, accessModes, reclaimPolicy.
+# -- Persistent Volumes are available to whole cluster. They are not restricted to particular kubernetes namespace.
+# -- Later user creates PersistentVolumeClaim object by mainly specifying above created PersistentVolume object name. Then the user reference this PersistentVolumeClaim object in their Pod deployment specification, further mounting that volume inside the containers of that pod.
+# -- NOTE: PersistentVolumeClaim object are namespaced in Kubernetes. They are not available to the whole cluster.
+#
+# b. Dynamically using PersistentVolumeClaim object:
+# -- Here user creates PersistentVolumeClaim object by mainly specifying StorageClass object name, how much storage should be allocated for this persistent volume, accessModes, reclaimPolicy.
+# -- If StorageClass object name not specified, then default StorageClass object is used.
+# -- So here PersistentVolumeClaim object either uses an already exisitng free PersistentVolume object if it satisfies above requirements. Or else it will autimatically create a new PersistentVolume object on the fly with the help of StorageClass object.
+# -- Then the user reference this PersistentVolumeClaim object in their Pod deployment specification, further mounting that volume inside the containers of that pod.
+#
+# - So whether it's statically or dynamically, user should create PersistentVolumeClaim object to claim Persistent Volume.
+# - Also when pod dies, the Persistent Volume remains as long as PersistentVolumeClaim object exists. Because PersistentVolumeClaim object is independent of lifecycle of the Pod. So when that Pod restarts/recreated it references the same PersistentVolumeClaim object thereby using the same Persistent Volume.
+# - Also if you try to delete a PersistentVolumeClaim object which is currently being used by a Pod, then that delete operation is postponed until the Pod releases that PersistentVolumeClaim (in turn PersistentVolume) resource.
+
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-server-persistent-volume-claim
 spec:
+  # storageClassName: is not specified. That means default StorageClass object of the kubernetes cluster is used.
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteOnce # Allows read-write access by a single node (i.e., pod).
+    # - ReadOnlyMany # Allows read-only access by multiple nodes (i.e., pods).
+    # - ReadWriteMany # Allows read-write access by multiple nodes (i.e., pods).
   resources:
     requests:
       storage: 100Mi
