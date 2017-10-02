@@ -49,6 +49,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-server-persistent-volume-claim
+  namespace: fibonacci
 spec:
   # storageClassName: is not specified. That means default StorageClass object of the kubernetes cluster is used.
   accessModes:
