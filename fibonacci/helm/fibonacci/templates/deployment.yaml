@@ -1,0 +1,39 @@
+{{ range $deployment := .Values.deployments }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $deployment.name }}-deployment
+{{- include "fibonacci.app.env" $ | indent 2 }}
+spec:
+  replicas: {{ $deployment.replicas }}
+  selector:
+    matchLabels:
+      {{ $.Values.app.name }}: {{ $deployment.name }}
+  template:
+    metadata:
+      labels:
+        {{ $.Values.app.name }}: {{ $deployment.name }}
+    spec:
+      {{- if $deployment.volumes }}
+      volumes:
+{{ toYaml $deployment.volumes | indent 8 }}
+      {{- end }}
+      containers:
+      {{- range $container := $deployment.containers }}
+        - name: {{ $deployment.name }}-container
+          image: {{ $.Values.app.imageRegistry.server }}/{{ $.Values.app.imageRegistry.username }}/{{ $.Values.app.name }}-{{ $deployment.name }}-image
+          {{- if $container.containerPort }}
+          ports:
+            - containerPort: {{ $container.containerPort }}
+          {{- end }}
+          {{- if $container.volumeMounts }}
+          volumeMounts:
+{{ toYaml $container.volumeMounts | indent 12 }}
+          {{- end }}
+          {{- if $container.env }}
+          env:
+{{ toYaml $container.env | indent 12 }}
+          {{- end }}
+      {{- end }}
+---
+{{ end }}

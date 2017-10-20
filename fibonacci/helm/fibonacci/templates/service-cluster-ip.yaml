@@ -1,0 +1,15 @@
+{{ range $clusterIP := .Values.services.clusterIPs }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $clusterIP.name }}-service-cluster-ip
+{{- include "fibonacci.app.env" $ | indent 2 }}
+spec:
+  type: ClusterIP
+  selector:
+    {{ $.Values.app.name }}: {{ $clusterIP.name }}
+  ports:
+    - port: {{ $clusterIP.port }}
+      targetPort: {{ $clusterIP.targetPort }}
+---
+{{ end }}

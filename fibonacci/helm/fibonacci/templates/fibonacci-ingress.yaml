@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $.Values.app.name }}-ingress
+{{- include "fibonacci.app.env" $ | indent 2 }}
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1 # capturing groups in regex
+spec:
+  ingressClassName: "nginx" # name of the ingress controller deployed in the cluster.
+  rules:
+    - http:
+        paths:
+          - path: /(.*) # capturing groups in regex
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: frontend-service-cluster-ip
+                port:
+                  number: 3000
+          - path: /api/(.*) # capturing groups in regex
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: backend-service-cluster-ip
+                port:
+                  number: 5000

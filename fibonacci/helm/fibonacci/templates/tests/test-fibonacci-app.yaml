@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "test-{{ $.Values.app.name }}-app"
+{{- include "fibonacci.app.env" $ | indent 2 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: "test-{{ $.Values.app.name }}-app"
+      image: curlimages/curl
+      command: ["curl"]
+      args: ["--fail", "--include", "--verbose", "ingress-nginx-controller.ingress-nginx:80"]
+  restartPolicy: Never
