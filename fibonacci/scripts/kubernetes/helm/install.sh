@@ -26,6 +26,6 @@ if kube_resource_already_exists "$kube_command"; then
     echo -e "Ignoring above error ...\n"
 fi
 
-helm upgrade --install fibonacci-prod helm/fibonacci/ --values=helm/fibonacci/values.yaml --values=helm/fibonacci/values-prod.yaml --wait --wait-for-jobs
+helm upgrade --install fibonacci-prod helm/fibonacci/ --namespace fibonacci-prod --values=helm/fibonacci/values.yaml --values=helm/fibonacci/values-prod.yaml --wait --wait-for-jobs
 
 echo -e "\n\nSUCCESS: helm chart installed."

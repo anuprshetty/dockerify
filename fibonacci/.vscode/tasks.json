@@ -77,7 +77,7 @@
     },
     {
       "label": "fibonacci->run_on->kubernetes->using->helm->test",
-      "command": "helm test fibonacci-prod --logs"
+      "command": "helm test fibonacci-prod --namespace fibonacci-prod --logs"
     }
   ]
 }
