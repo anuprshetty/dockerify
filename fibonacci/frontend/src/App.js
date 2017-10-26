@@ -4,14 +4,15 @@ import NavBar from "./NavBar";
 import Fib from "./Fib";
 import ThankYou from "./ThankYou";
 import Error from "./Error";
+import { APP_URL } from "./config";
 
 function App() {
   return (
     <>
       <NavBar />
       <Routes>
-        <Route path="/" element={<Fib />} />
-        <Route path="/thankyou" element={<ThankYou />} />
+        <Route path={`${APP_URL}/`} element={<Fib />} />
+        <Route path={`${APP_URL}/thankyou`} element={<ThankYou />} />
         <Route path="*" element={<Error />} />
       </Routes>
     </>

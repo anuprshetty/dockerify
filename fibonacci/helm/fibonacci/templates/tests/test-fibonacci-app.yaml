@@ -10,5 +10,5 @@ spec:
     - name: "test-{{ $.Values.app.name }}-app"
       image: curlimages/curl
       command: ["curl"]
-      args: ["--fail", "--include", "--verbose", "ingress-nginx-controller.ingress-nginx:80"]
+      args: ["--fail", "--include", "--verbose", "ingress-nginx-controller.ingress-nginx:80/fibonacci/"]
   restartPolicy: Never

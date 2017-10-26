@@ -11,14 +11,14 @@ spec:
   rules:
     - http:
         paths:
-          - path: /(.*) # capturing groups in regex
+          - path: /fibonacci/(.*) # capturing groups in regex
             pathType: ImplementationSpecific
             backend:
               service:
                 name: frontend-service-cluster-ip
                 port:
                   number: 3000
-          - path: /api/(.*) # capturing groups in regex
+          - path: /fibonacci/api/(.*) # capturing groups in regex
             pathType: ImplementationSpecific
             backend:
               service:
