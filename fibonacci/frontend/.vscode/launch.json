@@ -10,6 +10,19 @@
       "name": "fibonacci->attach_debugger_for->frontend_process->running_on->docker_compose->on_env->dev",
       "url": "http://localhost:8080",
       "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "fibonacci->frontend->b2k",
+      "url": "http://localhost:3000/fibonacci/",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "atomic_tasks->bridge-to-kubernetes.compound",
+      "env": {
+        "GRPC_DNS_RESOLVER": "native"
+      }
+      // IMPORTANT: "npm run debug" --> run this command on a separate terminal once the debugger is launched.
+      // KNOWN ISSUE: backend api calls from frontend app fail because of the bug in setupProxy.js file (path: /src/bug_setupProxy.js).
     }
   ]
 }

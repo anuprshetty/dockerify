@@ -2,13 +2,8 @@
   // See https://go.microsoft.com/fwlink/?LinkId=733558
   // for the documentation about the tasks.json format
 
-  // Available variables which can be used inside of strings.
-  // $(workspaceFolder): the project root folder
-  // $(file): the current opened file
-  // $(fileDirname): the current opened file's dirname
-  // ${fileBasename): the current opened file's basename
-  // $(fileExtname): the current opened file's extension
-  // $(cwd): the current working directory of the spawned process
+  // See https://code.visualstudio.com/docs/editor/variables-reference
+  // for available variables which can be used in tasks.json, launch.json and settings.json files.
 
   "version": "2.0.0",
   "type": "shell",
@@ -34,6 +29,47 @@
         "frontend->prerequisites->npm_cleanup",
         "frontend->prerequisites->npm_install"
       ]
+    },
+    {
+      "label": "atomic_tasks->frontend->b2k->kubectx_kubens",
+      "command": "kubectx ${input:b2k_target_cluster} && kubens ${input:b2k_target_namespace}"
+    },
+    {
+      "label": "atomic_tasks->bridge-to-kubernetes.resource",
+      "type": "bridge-to-kubernetes.resource",
+      "resource": "frontend-service-cluster-ip",
+      "resourceType": "service",
+      "ports": [3000],
+      "targetCluster": "${input:b2k_target_cluster}",
+      "targetNamespace": "${input:b2k_target_namespace}",
+      "useKubernetesServiceEnvironmentVariables": false
+      // "isolateAs": "anuprshetty" // isolation feature in b2k not working.
+    },
+    {
+      "label": "atomic_tasks->bridge-to-kubernetes.compound",
+      "dependsOn": [
+        "atomic_tasks->frontend->b2k->kubectx_kubens",
+        "atomic_tasks->bridge-to-kubernetes.resource"
+      ],
+      "dependsOrder": "sequence"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "b2k_target_cluster",
+      "type": "command",
+      "command": "shellCommand.execute",
+      "args": {
+        "command": "kubectx"
+      }
+    },
+    {
+      "id": "b2k_target_namespace",
+      "type": "command",
+      "command": "shellCommand.execute",
+      "args": {
+        "command": "kubens"
+      }
     }
   ]
 }
