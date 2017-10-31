@@ -43,6 +43,7 @@
       "targetCluster": "${input:b2k_target_cluster}",
       "targetNamespace": "${input:b2k_target_namespace}",
       "useKubernetesServiceEnvironmentVariables": false
+      // "isolateAs": "anuprshetty" // isolation feature in b2k not working.
     },
     {
       "label": "atomic_tasks->bridge-to-kubernetes.compound",
