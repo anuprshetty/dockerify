@@ -44,12 +44,20 @@
       "command": "docker compose --project-name fibonacci --file docker_composes/docker-compose.yml logs --timestamps --follow"
     },
     {
-      "label": "fibonacci->run_on->kubernetes->prerequisites->push_images->of->prod->to_registry->local",
+      "label": "fibonacci->run_on->kubernetes->prerequisites->build_tag_push_images->of->prod->to_registry->local",
       "command": "chmod 755 scripts/compose_registry_push.sh && ./scripts/compose_registry_push.sh --docker-compose-file docker_composes/docker-compose.yml --registry-server localhost:4321 --registry-username registry_user --project-name ${workspaceFolderBasename}"
     },
     {
-      "label": "fibonacci->run_on->kubernetes->prerequisites->push_images->of->prod->to_registry->docker_hub",
+      "label": "fibonacci->run_on->kubernetes->prerequisites->build_tag_push_images->of->prod->to_registry->docker_hub",
       "command": "chmod 755 scripts/compose_registry_push.sh && ./scripts/compose_registry_push.sh --docker-compose-file docker_composes/docker-compose.yml --registry-server docker.io --registry-username anuprshetty --project-name ${workspaceFolderBasename}"
+    },
+    {
+      "label": "fibonacci->run_on->kubernetes->prerequisites->only_build_tag_images->of->prod->for_registry->local",
+      "command": "chmod 755 scripts/compose_registry_push.sh && ./scripts/compose_registry_push.sh --docker-compose-file docker_composes/docker-compose.yml --registry-server localhost:4321 --registry-username registry_user --project-name ${workspaceFolderBasename} --only-build-tag true"
+    },
+    {
+      "label": "fibonacci->run_on->kubernetes->prerequisites->only_build_tag_images->of->prod->for_registry->docker_hub",
+      "command": "chmod 755 scripts/compose_registry_push.sh && ./scripts/compose_registry_push.sh --docker-compose-file docker_composes/docker-compose.yml --registry-server docker.io --registry-username anuprshetty --project-name ${workspaceFolderBasename} --only-build-tag true"
     },
     {
       "label": "fibonacci->run_on->kubernetes->prerequisites->ingress_nginx_controller->setup",

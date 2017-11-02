@@ -35,6 +35,7 @@
       "command": "kubectx ${input:b2k_target_cluster} && kubens ${input:b2k_target_namespace}"
     },
     {
+      // refer b2k cli tool "dsc connect --help" --> Redirect traffic from a service, deployment or pod running in your cluster to your local machine.
       "label": "atomic_tasks->bridge-to-kubernetes.resource",
       "type": "bridge-to-kubernetes.resource",
       "resource": "backend-service-cluster-ip",

@@ -9,9 +9,10 @@ DOCKER_COMPOSE_FILE=""
 REGISTRY_SERVER=""
 REGISTRY_USERNAME=""
 PROJECT_NAME=""
+ONLY_BUILD_TAG=false
 
 usage() {
-    echo "Usage: $0 --docker-compose-file <file_path> --registry-server <registry_server> --registry-username <registry_username> --project-name <project_name>"
+    echo "Usage: $0 --docker-compose-file <file_path> --registry-server <registry_server> --registry-username <registry_username> --project-name <project_name> [--only-build-tag true|false]"
     exit 1
 }
 
@@ -34,6 +35,21 @@ while [[ $# -gt 0 ]]; do
         PROJECT_NAME="$2"
         shift 2
         ;;
+    --only-build-tag)
+        case "$2" in
+        true)
+            ONLY_BUILD_TAG=true
+            shift 2
+            ;;
+        false)
+            ONLY_BUILD_TAG=false
+            shift 2
+            ;;
+        *)
+            usage
+            ;;
+        esac
+        ;;
     *)
         usage
         ;;
@@ -54,5 +70,14 @@ for image_and_tag in $image_and_tag_list; do
 
     docker tag "$image_and_tag" "$registry_image_and_tag"
 
-    docker push "$registry_image_and_tag"
+    if [ "$ONLY_BUILD_TAG" = false ]; then
+        docker push "$registry_image_and_tag"
+    fi
 done
+
+echo -e "\n"
+if [ "$ONLY_BUILD_TAG" = true ]; then
+    echo -e "SUCCESS: ONLY_BUILD_TAG ... DONE"
+else
+    echo -e "SUCCESS: BUILD_TAG_PUSH ... DONE"
+fi
