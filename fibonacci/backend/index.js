@@ -38,18 +38,18 @@ const redisClient = await redis
   .on("error", (err) => console.log(`Redis Client Error: ${err}`))
   .connect();
 
-app.get("/fib_indeces", async (req, res) => {
+app.get("/fib_indeces/", async (req, res) => {
   let result = await pgPool.query("SELECT * from fib_indeces");
   let fib_indeces = result.rows;
   res.send(fib_indeces);
 });
 
-app.get("/fib_mappings", async (req, res) => {
+app.get("/fib_mappings/", async (req, res) => {
   let fib_mappings = await redisClient.hGetAll("fib_mappings");
   res.send(fib_mappings);
 });
 
-app.post("/fib_indices", async (req, res) => {
+app.post("/fib_indices/", async (req, res) => {
   let fib_index = parseInt(req.body.fib_index);
 
   // const maxFibIndex = 40;
