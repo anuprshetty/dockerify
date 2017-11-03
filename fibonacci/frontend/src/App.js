@@ -12,7 +12,7 @@ function App() {
       <NavBar />
       <Routes>
         <Route path={`${APP_URL}/`} element={<Fib />} />
-        <Route path={`${APP_URL}/thankyou`} element={<ThankYou />} />
+        <Route path={`${APP_URL}/thankyou/`} element={<ThankYou />} />
         <Route path="*" element={<Error />} />
       </Routes>
     </>

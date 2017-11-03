@@ -9,7 +9,7 @@ RUN echo "Current working directory: $(pwd)"
 
 # Download and install the dependencies
 RUN apk add --update gcc
-RUN apk add --update redis=7.0.14-r0
+RUN apk add --update redis
 
 COPY . .
 

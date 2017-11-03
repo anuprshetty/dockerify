@@ -15,12 +15,12 @@ class Fib extends Component {
   }
 
   async fetchMappings() {
-    const result = await axios.get(`${APP_URL}/${BACKEND_URL}/fib_mappings`);
+    const result = await axios.get(`${APP_URL}/${BACKEND_URL}/fib_mappings/`);
     this.setState({ mappings: result.data });
   }
 
   async fetchSeenIndeces() {
-    const result = await axios.get(`${APP_URL}/${BACKEND_URL}/fib_indeces`);
+    const result = await axios.get(`${APP_URL}/${BACKEND_URL}/fib_indeces/`);
     this.setState({
       seenIndeces: result.data,
     });
@@ -29,7 +29,7 @@ class Fib extends Component {
   handleSubmit = async (event) => {
     event.preventDefault(); // event.preventDefault() is used to prevent the form from being submitted in the traditional way (which would result in a page reload) so that we can handle the submission using our custom logic instead.
 
-    await axios.post(`${APP_URL}/${BACKEND_URL}/fib_indices`, {
+    await axios.post(`${APP_URL}/${BACKEND_URL}/fib_indices/`, {
       fib_index: parseInt(this.state.index),
     });
     this.setState({ index: "" });

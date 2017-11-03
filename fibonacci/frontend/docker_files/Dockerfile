@@ -24,8 +24,8 @@ ARG PROJECT_ROOT_FOLDER=frontend
 WORKDIR /developer/projects/$PROJECT_ROOT_FOLDER
 RUN echo "Current working directory: $(pwd)"
 
-COPY --from=builder /developer/projects/frontend/build ./build
-COPY --from=builder /developer/projects/frontend/scripts ./scripts
+COPY --from=builder /developer/projects/frontend/build/ ./build/
+COPY --from=builder /developer/projects/frontend/scripts/ ./scripts/
 
 COPY ../nginx.conf ./nginx.conf
 

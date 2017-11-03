@@ -11,7 +11,7 @@ function NavBar() {
           <Link to={`${APP_URL}/`}>Home</Link>
         </li>
         <li className="nav-item">
-          <Link to={`${APP_URL}/thankyou`}>Thank You</Link>
+          <Link to={`${APP_URL}/thankyou/`}>Thank You</Link>
         </li>
       </ul>
     </nav>
