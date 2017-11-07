@@ -1,0 +1,4 @@
+app:
+  imageRegistry:
+    server: host.docker.internal:4321
+    username: registry_user

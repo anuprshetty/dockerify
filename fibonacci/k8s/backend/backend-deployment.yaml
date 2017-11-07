@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend-container
-          image: anuprshetty/fibonacci-backend-image
+          image: anuprshetty/fibonacci-backend-image:prod
           ports:
             - containerPort: 5000
           env:

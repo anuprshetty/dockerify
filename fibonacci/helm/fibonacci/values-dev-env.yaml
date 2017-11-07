@@ -1,0 +1,140 @@
+# Default values for fibonacci.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# scope in helm chart: $ = {"Values" : {}}
+#
+# - $ --> points to root level
+# - . --> points to current level
+# So $.Values --> points to values of helm chart
+
+#####################################################
+
+# IMPORTANT:
+# hostPath volume in kubernetes:
+# - The storage for hostPath volume of a pod is provided by the underlying node on which that pod is running.
+# - In docker desktop for mac, with single node cluster, storage for hostPath volume of a pod is privided by your local machine. So we can use this setup for kubernetes local development.
+# - The hostPath volume can be used to map your local machine source code to the data of container running in the cluster.
+# - Cons:
+# -- Kubernetes doesn't support relative path in hostPath volume config. It only supports absolute path.
+# -- That's why we commented hostPath volume config in this dev env yml file.
+
+app:
+  env: dev
+
+deployments:
+  - name: redis-server
+    replicas: 1
+    containers:
+      - containerPort: 6379
+
+  - name: worker
+    replicas: 1
+    # volumes:
+    #   - name: dev-local-worker-index-js-file-volume
+    #     hostPath:
+    #       path: /Users/anupshetty/developer/projects/dockerify/fibonacci/worker/index.js
+    #       type: File
+    containers:
+      - env:
+          - name: REDIS_SERVER_HOST
+            value: redis-server-service-cluster-ip
+          - name: REDIS_SERVER_PORT
+            value: "6379"
+        # volumeMounts:
+        #   - name: dev-local-worker-index-js-file-volume
+        #     mountPath: /developer/projects/worker/index.js
+
+  - name: postgres-server
+    replicas: 1
+    volumes:
+      - name: postgres-server-volume
+        persistentVolumeClaim:
+          claimName: postgres-server-persistent-volume-claim
+    containers:
+      - containerPort: 5432
+        volumeMounts:
+          - name: postgres-server-volume
+            mountPath: /var/lib/postgresql/data # the path within the container where the volume content will be mounted.
+            subPath: postgresql/data # subdirectory within the volume to be mounted inside the container.
+        env:
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgres-server-secret
+                key: POSTGRES_USER
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-server-secret
+                key: POSTGRES_PASSWORD
+          - name: POSTGRES_DB
+            valueFrom:
+              secretKeyRef:
+                name: postgres-server-secret
+                key: POSTGRES_DB
+
+  - name: backend
+    replicas: 1
+    # volumes:
+    #   - name: dev-local-backend-index-js-file-volume
+    #     hostPath:
+    #       path: /Users/anupshetty/developer/projects/dockerify/fibonacci/backend/index.js
+    #       type: File
+    containers:
+      - containerPort: 5000
+        # volumeMounts:
+        #   - name: dev-local-backend-index-js-file-volume
+        #     mountPath: /developer/projects/backend/index.js
+        env:
+          - name: APP_PORT
+            value: "5000"
+
+          - name: POSTGRES_HOST
+            value: postgres-server-service-cluster-ip
+          - name: POSTGRES_PORT
+            value: "5432"
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgres-server-secret
+                key: POSTGRES_USER
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-server-secret
+                key: POSTGRES_PASSWORD
+          - name: POSTGRES_DB
+            valueFrom:
+              secretKeyRef:
+                name: postgres-server-secret
+                key: POSTGRES_DB
+
+          - name: REDIS_SERVER_HOST
+            value: redis-server-service-cluster-ip
+          - name: REDIS_SERVER_PORT
+            value: "6379"
+
+  - name: frontend
+    replicas: 1
+    # volumes:
+    #   - name: dev-local-frontend-public-folder-volume
+    #     hostPath:
+    #       path: /Users/anupshetty/developer/projects/dockerify/fibonacci/frontend/public/
+    #       type: Directory
+    #   - name: dev-local-frontend-src-folder-volume
+    #     hostPath:
+    #       path: /Users/anupshetty/developer/projects/dockerify/fibonacci/frontend/src/
+    #       type: Directory
+    containers:
+      - containerPort: 3000
+        # volumeMounts:
+        #   - name: dev-local-frontend-public-folder-volume
+        #     mountPath: /developer/projects/frontend/public/
+        #   - name: dev-local-frontend-src-folder-volume
+        #     mountPath: /developer/projects/frontend/src/
+        env:
+          - name: BACKEND_HOST
+            value: backend-service-cluster-ip
+          - name: BACKEND_PORT
+            value: "5000"

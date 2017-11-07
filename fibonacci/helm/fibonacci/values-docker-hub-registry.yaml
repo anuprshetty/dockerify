@@ -1,0 +1,4 @@
+app:
+  imageRegistry:
+    server: docker.io
+    username: anuprshetty

@@ -11,7 +11,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: /{{ $.Values.app.name }}/(.*) # capturing groups in regex
+          - path: /({{ $.Values.app.name }}/.*) # capturing groups in regex
             pathType: ImplementationSpecific
             backend:
               service:

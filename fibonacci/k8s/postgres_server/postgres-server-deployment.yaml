@@ -19,7 +19,7 @@ spec:
             claimName: postgres-server-persistent-volume-claim
       containers:
         - name: postgres-server-container
-          image: anuprshetty/fibonacci-postgres-server-image
+          image: anuprshetty/fibonacci-postgres-server-image:prod
           ports:
             - containerPort: 5432
           volumeMounts:

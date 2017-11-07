@@ -21,7 +21,7 @@ spec:
       containers:
       {{- range $container := $deployment.containers }}
         - name: {{ $deployment.name }}-container
-          image: {{ $.Values.app.imageRegistry.server }}/{{ $.Values.app.imageRegistry.username }}/{{ $.Values.app.name }}-{{ $deployment.name }}-image
+          image: {{ $.Values.app.imageRegistry.server }}/{{ $.Values.app.imageRegistry.username }}/{{ $.Values.app.name }}-{{ $deployment.name }}-image:{{ $.Values.app.env }}
           {{- if $container.containerPort }}
           ports:
             - containerPort: {{ $container.containerPort }}
@@ -34,6 +34,10 @@ spec:
           env:
 {{ toYaml $container.env | indent 12 }}
           {{- end }}
+      {{- end }}
+      {{- if eq $.Values.app.imageRegistry.server "host.docker.internal:4321" }}
+      imagePullSecrets:
+        - name: docker-local-registry-secret
       {{- end }}
 ---
 {{ end }}

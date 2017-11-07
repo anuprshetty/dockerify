@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: redis-server-container
-          image: anuprshetty/fibonacci-redis-server-image
+          image: anuprshetty/fibonacci-redis-server-image:prod
           ports:
             - containerPort: 6379
