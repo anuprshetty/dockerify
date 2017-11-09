@@ -9,10 +9,11 @@ DOCKER_COMPOSE_FILE=""
 REGISTRY_SERVER=""
 REGISTRY_USERNAME=""
 PROJECT_NAME=""
+IMAGE_TAG="latest"
 ONLY_BUILD_TAG=false
 
 usage() {
-    echo "Usage: $0 --docker-compose-file <file_path> --registry-server <registry_server> --registry-username <registry_username> --project-name <project_name> [--only-build-tag true|false]"
+    echo "Usage: $0 --docker-compose-file <file_path> --registry-server <registry_server> --registry-username <registry_username> --project-name <project_name> [--image-tag <image_tag>] [--only-build-tag true|false]"
     exit 1
 }
 
@@ -33,6 +34,10 @@ while [[ $# -gt 0 ]]; do
         ;;
     --project-name)
         PROJECT_NAME="$2"
+        shift 2
+        ;;
+    --image-tag)
+        IMAGE_TAG="$2"
         shift 2
         ;;
     --only-build-tag)
@@ -66,7 +71,9 @@ docker compose -f "$DOCKER_COMPOSE_FILE" build
 image_and_tag_list=$(docker-compose -f "$DOCKER_COMPOSE_FILE" config --images)
 
 for image_and_tag in $image_and_tag_list; do
-    registry_image_and_tag="$REGISTRY_SERVER/$REGISTRY_USERNAME/$PROJECT_NAME-$image_and_tag"
+    image_name=$(echo $image_and_tag | awk -F':' '{print $1}')
+
+    registry_image_and_tag="$REGISTRY_SERVER/$REGISTRY_USERNAME/$PROJECT_NAME-$image_name:$IMAGE_TAG"
 
     docker tag "$image_and_tag" "$registry_image_and_tag"
 
