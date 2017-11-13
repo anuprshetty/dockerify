@@ -9,6 +9,8 @@ echo -e "Uninstalling helm chart ... WAIT\n"
 
 kubectl delete secret --namespace fibonacci-prod postgres-server-secret --ignore-not-found=true
 
+kubectl delete secret --namespace fibonacci-prod docker-local-registry-secret --ignore-not-found=true
+
 helm uninstall fibonacci-prod --namespace fibonacci-prod --ignore-not-found --wait
 
 kubectl delete namespace fibonacci-prod --ignore-not-found=true --wait=true
