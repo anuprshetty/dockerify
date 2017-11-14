@@ -85,8 +85,8 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ../frontend/public:/developer/projects/frontend/public
-      - ../frontend/src:/developer/projects/frontend/src
+      - ../frontend/public/:/developer/projects/frontend/public/
+      - ../frontend/src/:/developer/projects/frontend/src/
     depends_on:
       - backend
 
