@@ -44,20 +44,28 @@
       "command": "docker compose --project-name fibonacci --file docker_composes/docker-compose.yml logs --timestamps --follow"
     },
     {
-      "label": "fibonacci->run_on->kubernetes->prerequisites->build_tag_push_images->of->prod->to_registry->local",
-      "command": "chmod 755 scripts/compose_registry_push.sh && ./scripts/compose_registry_push.sh --docker-compose-file docker_composes/docker-compose.yml --registry-server localhost:4321 --registry-username registry_user --project-name ${workspaceFolderBasename}"
+      "label": "fibonacci->run_on->kubernetes->prerequisites->build_tag_push_images->of_env->prod->to_registry->local",
+      "command": "chmod 755 scripts/compose_registry_push.sh && ./scripts/compose_registry_push.sh --docker-compose-file docker_composes/docker-compose.yml --registry-server localhost:4321 --registry-username registry_user --project-name ${workspaceFolderBasename} --image-tag prod --only-build-tag false"
     },
     {
-      "label": "fibonacci->run_on->kubernetes->prerequisites->build_tag_push_images->of->prod->to_registry->docker_hub",
-      "command": "chmod 755 scripts/compose_registry_push.sh && ./scripts/compose_registry_push.sh --docker-compose-file docker_composes/docker-compose.yml --registry-server docker.io --registry-username anuprshetty --project-name ${workspaceFolderBasename}"
+      "label": "fibonacci->run_on->kubernetes->prerequisites->build_tag_push_images->of_env->dev->to_registry->local",
+      "command": "chmod 755 scripts/compose_registry_push.sh && ./scripts/compose_registry_push.sh --docker-compose-file docker_composes/docker-compose.dev.yml --registry-server localhost:4321 --registry-username registry_user --project-name ${workspaceFolderBasename} --image-tag dev --only-build-tag false"
     },
     {
-      "label": "fibonacci->run_on->kubernetes->prerequisites->only_build_tag_images->of->prod->for_registry->local",
-      "command": "chmod 755 scripts/compose_registry_push.sh && ./scripts/compose_registry_push.sh --docker-compose-file docker_composes/docker-compose.yml --registry-server localhost:4321 --registry-username registry_user --project-name ${workspaceFolderBasename} --only-build-tag true"
+      "label": "fibonacci->run_on->kubernetes->prerequisites->build_tag_push_images->of_env->prod->to_registry->docker_hub",
+      "command": "chmod 755 scripts/compose_registry_push.sh && ./scripts/compose_registry_push.sh --docker-compose-file docker_composes/docker-compose.yml --registry-server docker.io --registry-username anuprshetty --project-name ${workspaceFolderBasename} --image-tag prod --only-build-tag false"
     },
     {
-      "label": "fibonacci->run_on->kubernetes->prerequisites->only_build_tag_images->of->prod->for_registry->docker_hub",
-      "command": "chmod 755 scripts/compose_registry_push.sh && ./scripts/compose_registry_push.sh --docker-compose-file docker_composes/docker-compose.yml --registry-server docker.io --registry-username anuprshetty --project-name ${workspaceFolderBasename} --only-build-tag true"
+      "label": "fibonacci->run_on->kubernetes->prerequisites->only_build_tag_images->of_env->prod->for_registry->local",
+      "command": "chmod 755 scripts/compose_registry_push.sh && ./scripts/compose_registry_push.sh --docker-compose-file docker_composes/docker-compose.yml --registry-server localhost:4321 --registry-username registry_user --project-name ${workspaceFolderBasename} --image-tag prod --only-build-tag true"
+    },
+    {
+      "label": "fibonacci->run_on->kubernetes->prerequisites->only_build_tag_images->of_env->dev->for_registry->local",
+      "command": "chmod 755 scripts/compose_registry_push.sh && ./scripts/compose_registry_push.sh --docker-compose-file docker_composes/docker-compose.dev.yml --registry-server localhost:4321 --registry-username registry_user --project-name ${workspaceFolderBasename} --image-tag dev --only-build-tag true"
+    },
+    {
+      "label": "fibonacci->run_on->kubernetes->prerequisites->only_build_tag_images->of_env->prod->for_registry->docker_hub",
+      "command": "chmod 755 scripts/compose_registry_push.sh && ./scripts/compose_registry_push.sh --docker-compose-file docker_composes/docker-compose.yml --registry-server docker.io --registry-username anuprshetty --project-name ${workspaceFolderBasename} --image-tag prod --only-build-tag true"
     },
     {
       "label": "fibonacci->run_on->kubernetes->prerequisites->ingress_nginx_controller->setup",
@@ -68,24 +76,40 @@
       "command": "chmod 755 ./scripts/ingress_nginx_controller/remove.sh && ./scripts/ingress_nginx_controller/remove.sh"
     },
     {
-      "label": "fibonacci->run_on->kubernetes->using->manifests->apply",
+      "label": "fibonacci->run_on->kubernetes->using->manifests->for_env->prod->from_registry->docker_hub->apply",
       "command": "chmod 755 ./scripts/kubernetes/manifests/apply.sh && ./scripts/kubernetes/manifests/apply.sh"
     },
     {
-      "label": "fibonacci->run_on->kubernetes->using->manifests->delete",
+      "label": "fibonacci->run_on->kubernetes->using->manifests->for_env->prod->from_registry->docker_hub->delete",
       "command": "chmod 755 ./scripts/kubernetes/manifests/delete.sh && ./scripts/kubernetes/manifests/delete.sh"
     },
     {
-      "label": "fibonacci->run_on->kubernetes->using->helm->install",
-      "command": "chmod 755 ./scripts/kubernetes/helm/install.sh && ./scripts/kubernetes/helm/install.sh"
+      "label": "fibonacci->run_on->kubernetes->using->helm->for_env->prod->from_registry->docker_hub->install",
+      "command": "chmod 755 ./scripts/kubernetes/helm/prod_env/docker_hub_registry/install.sh && ./scripts/kubernetes/helm/prod_env/docker_hub_registry/install.sh"
     },
     {
-      "label": "fibonacci->run_on->kubernetes->using->helm->uninstall",
-      "command": "chmod 755 ./scripts/kubernetes/helm/uninstall.sh && ./scripts/kubernetes/helm/uninstall.sh"
+      "label": "fibonacci->run_on->kubernetes->using->helm->for_env->prod->from_registry->local->install",
+      "command": "chmod 755 ./scripts/kubernetes/helm/prod_env/local_registry/install.sh && ./scripts/kubernetes/helm/prod_env/local_registry/install.sh"
     },
     {
-      "label": "fibonacci->run_on->kubernetes->using->helm->test",
+      "label": "fibonacci->run_on->kubernetes->using->helm->for_env->prod->uninstall",
+      "command": "chmod 755 ./scripts/kubernetes/helm/prod_env/uninstall.sh && ./scripts/kubernetes/helm/prod_env/uninstall.sh"
+    },
+    {
+      "label": "fibonacci->run_on->kubernetes->using->helm->for_env->prod->test",
       "command": "helm test fibonacci-prod --namespace fibonacci-prod --logs"
+    },
+    {
+      "label": "fibonacci->run_on->kubernetes->using->helm->for_env->dev->from_registry->local->install",
+      "command": "chmod 755 ./scripts/kubernetes/helm/dev_env/local_registry/install.sh && ./scripts/kubernetes/helm/dev_env/local_registry/install.sh"
+    },
+    {
+      "label": "fibonacci->run_on->kubernetes->using->helm->for_env->dev->uninstall",
+      "command": "chmod 755 ./scripts/kubernetes/helm/dev_env/uninstall.sh && ./scripts/kubernetes/helm/dev_env/uninstall.sh"
+    },
+    {
+      "label": "fibonacci->run_on->kubernetes->using->helm->for_env->dev->test",
+      "command": "helm test fibonacci-dev --namespace fibonacci-dev --logs"
     }
   ]
 }
