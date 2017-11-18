@@ -77,8 +77,8 @@ services:
     hostname: frontend
     restart: "no"
     environment:
-      - APP_PORT=3000
       - WDS_SOCKET_PORT=0
+      - WDS_SOCKET_PATH=/fibonacci/ws # Webpack Dev Server (WDS) Bug: Hot reloading (automatic reloading in browser when react code changes while debugging) feature not working with custom url. Default url is '/ws'.
 
       - BACKEND_HOST=backend
       - BACKEND_PORT=5000

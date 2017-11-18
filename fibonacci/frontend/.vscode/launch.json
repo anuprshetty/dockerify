@@ -8,7 +8,7 @@
       "type": "chrome",
       "request": "launch",
       "name": "fibonacci->attach_debugger_for->frontend_process->running_on->docker_compose->on_env->dev",
-      "url": "http://localhost:8080",
+      "url": "http://localhost:8080/fibonacci/",
       "webRoot": "${workspaceFolder}"
     },
     {

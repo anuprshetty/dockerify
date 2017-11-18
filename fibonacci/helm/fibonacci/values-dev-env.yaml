@@ -134,6 +134,12 @@ deployments:
         #   - name: dev-local-frontend-src-folder-volume
         #     mountPath: /developer/projects/frontend/src/
         env:
+          - name: WDS_SOCKET_PORT
+            value: "0"
+          - name: WDS_SOCKET_PATH
+            # Webpack Dev Server (WDS) Bug: Hot reloading (automatic reloading in browser when react code changes while debugging) feature not working with custom url. Default url is '/ws'.
+            value: /fibonacci/ws
+
           - name: BACKEND_HOST
             value: backend-service-cluster-ip
           - name: BACKEND_PORT
