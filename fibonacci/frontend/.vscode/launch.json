@@ -22,14 +22,12 @@
       "type": "chrome",
       "request": "launch",
       "name": "fibonacci->frontend->b2k",
-      "url": "http://localhost:3000/fibonacci/",
+      "url": "http://localhost:80/fibonacci/",
       "webRoot": "${workspaceFolder}",
-      "preLaunchTask": "atomic_tasks->bridge-to-kubernetes.compound",
+      // "preLaunchTask": "frontend->b2k->prerequisites", // NOTE: frontend debugging session's preLaunchTask for b2k doesn't work as expected. So run that preLaunchTask manually before launching this debugging session.
       "env": {
         "GRPC_DNS_RESOLVER": "native"
       }
-      // IMPORTANT: "npm run debug" --> run this command on a separate terminal once the debugger is launched.
-      // KNOWN ISSUE: backend api calls from frontend app fail because of the bug in setupProxy.js file (path: /src/bug_setupProxy.js).
     }
   ]
 }

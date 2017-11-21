@@ -46,11 +46,21 @@
       // "isolateAs": "anuprshetty" // isolation feature in b2k not working.
     },
     {
+      "label": "atomic_tasks->frontend->b2k->debug",
+      "command": "npm run debug"
+    },
+    {
       "label": "atomic_tasks->bridge-to-kubernetes.compound",
       "dependsOn": [
         "atomic_tasks->frontend->b2k->kubectx_kubens",
-        "atomic_tasks->bridge-to-kubernetes.resource"
+        "atomic_tasks->bridge-to-kubernetes.resource",
+        "atomic_tasks->frontend->b2k->debug"
       ],
+      "dependsOrder": "sequence"
+    },
+    {
+      "label": "frontend->b2k->prerequisites",
+      "dependsOn": ["atomic_tasks->bridge-to-kubernetes.compound"],
       "dependsOrder": "sequence"
     }
   ],
