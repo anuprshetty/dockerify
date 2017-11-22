@@ -1,3 +1,10 @@
+# IMPORTANT:
+# Ingress and Ingress Controller in Kubernetes:
+# - the Ingress object is a Kubernetes resource that specifies the desired traffic routing rules, while the Ingress Controller is the actual implementation within the cluster responsible for interpreting these rules and configuring the external load balancer or proxy to route traffic accordingly to the correct backend services in the cluster based on the defined rules.
+# - There are n number of ingress controllers available in kubernetes. One of them is ingress-nginx-controller.
+# - ingress-nginx-controller = LoadBalancer service + nginx
+
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:

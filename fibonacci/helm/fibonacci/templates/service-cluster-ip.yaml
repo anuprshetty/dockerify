@@ -1,3 +1,36 @@
+# Kubernetes Services:
+#
+# Flow: container --> pod --> ClusterIP --> NodePort --> LoadBalancer
+#
+# 1. ClusterIP (default): can be accessed within the namespace of the cluster.
+#
+# 2. NodePort: ClusterIP service access scope + can be accessed outside the cluster using each cluster nodes ip addresses.
+#
+# 3. LoadBalancer: NodePort service access scope with an exception + that exception is that it can be accessed only by the LoadBalancer server ip address which is assigned by the cloud provider (Here the cluster itself is managed by this same cloud provider).
+#
+# 4. ExternalName: ClusterIP service access scope. 
+# - This ExternalName service is used when we need to access an external server/app/url/service (which exists outside of the cluster) from within the cluster.
+# - Example: to access a database which is outside of the cluster.
+#
+# 5. Headless: ClusterIP service access scope.
+# - ClusterIP service vs Headless service:
+# -- ClusterIP service: DNS lookup for service --> returns ClusterIP service ip address.
+# -- Headless service (Configured by setting clusterIP: None): DNS lookup for service --> returns list of pods ip addresses.
+# - You can use a headless service when you want a Pod grouping, but don't need a stable IP address. That means when you want to access a particular pod in a pod groud instead of randomly forwarding the request to any one of the pod in a pod groud by the kubernetes service.
+# - Example: When using StatefulSet in kubernetes.
+#
+# NOTE on StatefulSet:
+# - StatefulSet is an object in kubernetes used for managing stateful components or services like databases in the cluster. 
+# - stateful components (like databases) are very complex to configure when compared to stateless components (like pods) in kubernetes cluster. Bacause stateful components' replication, synchronization, data integrity, etc. are difficult to manage in kubernetes.
+# - Basically stateful components are not meant for containerization. So we generally place stateful components (like databases) outside of the cluster and access them using ExternalName serivce.
+
+# IMPORTANT:
+# Ingress and Ingress Controller in Kubernetes:
+# - the Ingress object is a Kubernetes resource that specifies the desired traffic routing rules, while the Ingress Controller is the actual implementation within the cluster responsible for interpreting these rules and configuring the external load balancer or proxy to route traffic accordingly to the correct backend services in the cluster based on the defined rules.
+# - There are n number of ingress controllers available in kubernetes. One of them is ingress-nginx-controller.
+# - ingress-nginx-controller = LoadBalancer service + nginx
+
+
 {{ range $clusterIP := .Values.services.clusterIPs }}
 apiVersion: v1
 kind: Service

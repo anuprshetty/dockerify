@@ -92,6 +92,14 @@
       "command": "chmod 755 ./scripts/kubernetes/helm/prod_env/local_registry/install.sh && ./scripts/kubernetes/helm/prod_env/local_registry/install.sh"
     },
     {
+      "label": "fibonacci->run_on->kubernetes->using->helm->for_env->prod->from_registry->docker_hub->template",
+      "command": "helm template fibonacci-prod helm/fibonacci/ --namespace fibonacci-prod --values=helm/fibonacci/values.yaml --values=helm/fibonacci/values-prod-env.yaml --values=helm/fibonacci/values-docker-hub-registry.yaml --debug"
+    },
+    {
+      "label": "fibonacci->run_on->kubernetes->using->helm->for_env->prod->from_registry->local->template",
+      "command": "helm template fibonacci-prod helm/fibonacci/ --namespace fibonacci-prod --values=helm/fibonacci/values.yaml --values=helm/fibonacci/values-prod-env.yaml --values=helm/fibonacci/values-local-registry.yaml --debug"
+    },
+    {
       "label": "fibonacci->run_on->kubernetes->using->helm->for_env->prod->uninstall",
       "command": "chmod 755 ./scripts/kubernetes/helm/prod_env/uninstall.sh && ./scripts/kubernetes/helm/prod_env/uninstall.sh"
     },
@@ -102,6 +110,10 @@
     {
       "label": "fibonacci->run_on->kubernetes->using->helm->for_env->dev->from_registry->local->install",
       "command": "chmod 755 ./scripts/kubernetes/helm/dev_env/local_registry/install.sh && ./scripts/kubernetes/helm/dev_env/local_registry/install.sh"
+    },
+    {
+      "label": "fibonacci->run_on->kubernetes->using->helm->for_env->dev->from_registry->local->template",
+      "command": "helm template fibonacci-dev helm/fibonacci/ --namespace fibonacci-dev --values=helm/fibonacci/values.yaml --values=helm/fibonacci/values-dev-env.yaml --values=helm/fibonacci/values-local-registry.yaml --debug"
     },
     {
       "label": "fibonacci->run_on->kubernetes->using->helm->for_env->dev->uninstall",
