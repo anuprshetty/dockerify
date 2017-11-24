@@ -1,34 +1,34 @@
 version: "3" # Version of docker-compose
 
 services:
-  redis-server:
+  redis-server-prod:
     build: ../redis_server
-    image: redis-server-image:latest
-    container_name: redis-server-container
-    hostname: redis-server
+    image: redis-server-image:prod
+    container_name: redis-server-container-prod
+    hostname: redis-server-prod
     restart: "no"
     ports:
       - "6380:6379"
 
-  worker:
+  worker-prod:
     build:
       context: ../worker
       dockerfile: docker_files/Dockerfile
-    image: worker-image:latest
-    container_name: worker-container
-    hostname: worker
+    image: worker-image:prod
+    container_name: worker-container-prod
+    hostname: worker-prod
     restart: "no"
     environment:
-      - REDIS_SERVER_HOST=redis-server
+      - REDIS_SERVER_HOST=redis-server-prod
       - REDIS_SERVER_PORT=6379
     depends_on:
-      - redis-server
+      - redis-server-prod
 
-  postgres-server:
+  postgres-server-prod:
     build: ../postgres_server
-    image: postgres-server-image:latest
-    container_name: postgres-server-container
-    hostname: postgres-server
+    image: postgres-server-image:prod
+    container_name: postgres-server-container-prod
+    hostname: postgres-server-prod
     restart: "no"
     environment:
       POSTGRES_USER: backend
@@ -39,63 +39,63 @@ services:
     ports:
       - "5433:5432"
 
-  backend:
+  backend-prod:
     build:
       context: ../backend
       dockerfile: docker_files/Dockerfile
-    image: backend-image:latest
-    container_name: backend-container
-    hostname: backend
+    image: backend-image:prod
+    container_name: backend-container-prod
+    hostname: backend-prod
     restart: "no"
     environment:
       - APP_PORT=5000
 
-      - POSTGRES_HOST=postgres-server
+      - POSTGRES_HOST=postgres-server-prod
       - POSTGRES_PORT=5432
       - POSTGRES_USER=backend
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=fib
 
-      - REDIS_SERVER_HOST=redis-server
+      - REDIS_SERVER_HOST=redis-server-prod
       - REDIS_SERVER_PORT=6379
     ports:
       - "5000:5000"
     depends_on:
-      - postgres-server
-      - redis-server
+      - postgres-server-prod
+      - redis-server-prod
 
-  frontend:
+  frontend-prod:
     build:
       context: ../frontend
       dockerfile: docker_files/Dockerfile
-    image: frontend-image:latest
-    container_name: frontend-container
-    hostname: frontend
+    image: frontend-image:prod
+    container_name: frontend-container-prod
+    hostname: frontend-prod
     restart: "no"
     environment:
-      - BACKEND_HOST=backend
+      - BACKEND_HOST=backend-prod
       - BACKEND_PORT=5000
     ports:
       - "3000:3000"
     depends_on:
-      - backend
+      - backend-prod
 
-  reverse_proxy:
+  reverse_proxy-prod:
     build:
       context: ../reverse_proxy
       dockerfile: docker_files/Dockerfile
-    image: reverse-proxy-image:latest
-    container_name: reverse-proxy-container
-    hostname: reverse_proxy
+    image: reverse-proxy-image:prod
+    container_name: reverse-proxy-container-prod
+    hostname: reverse_proxy-prod
     restart: "no"
     environment:
-      - BACKEND_HOST=backend
+      - BACKEND_HOST=backend-prod
       - BACKEND_PORT=5000
 
-      - FRONTEND_HOST=frontend
+      - FRONTEND_HOST=frontend-prod
       - FRONTEND_PORT=3000
     ports:
       - "8080:80"
     depends_on:
-      - backend
-      - frontend
+      - backend-prod
+      - frontend-prod

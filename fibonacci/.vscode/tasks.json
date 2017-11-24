@@ -2,13 +2,8 @@
   // See https://go.microsoft.com/fwlink/?LinkId=733558
   // for the documentation about the tasks.json format
 
-  // Available variables which can be used inside of strings.
-  // $(workspaceFolder): the project root folder
-  // $(file): the current opened file
-  // $(fileDirname): the current opened file's dirname
-  // ${fileBasename): the current opened file's basename
-  // $(fileExtname): the current opened file's extension
-  // $(cwd): the current working directory of the spawned process
+  // See https://code.visualstudio.com/docs/editor/variables-reference
+  // for available variables which can be used in tasks.json, launch.json and settings.json files.
 
   "version": "2.0.0",
   "type": "shell",
@@ -21,27 +16,31 @@
   "tasks": [
     {
       "label": "fibonacci->run_on->docker_compose->on_env->dev->up",
-      "command": "docker compose --project-name fibonacci --file docker_composes/docker-compose.dev.yml up --build --detach"
+      "command": "docker compose --project-name fibonacci_dev --file docker_composes/docker-compose.dev.yml up --build --detach"
     },
     {
       "label": "fibonacci->run_on->docker_compose->on_env->dev->down",
-      "command": "docker compose --project-name fibonacci --file docker_composes/docker-compose.dev.yml down"
+      "command": "docker compose --project-name fibonacci_dev --file docker_composes/docker-compose.dev.yml down"
     },
     {
       "label": "fibonacci->run_on->docker_compose->on_env->dev->logs",
-      "command": "docker compose --project-name fibonacci --file docker_composes/docker-compose.dev.yml logs --timestamps --follow"
+      "command": "docker compose --project-name fibonacci_dev --file docker_composes/docker-compose.dev.yml logs --timestamps --follow"
     },
     {
       "label": "fibonacci->run_on->docker_compose->on_env->prod->up",
-      "command": "docker compose --project-name fibonacci --file docker_composes/docker-compose.yml up --build --detach"
+      "command": "docker compose --project-name fibonacci_prod --file docker_composes/docker-compose.yml up --build --detach"
     },
     {
       "label": "fibonacci->run_on->docker_compose->on_env->prod->down",
-      "command": "docker compose --project-name fibonacci --file docker_composes/docker-compose.yml down"
+      "command": "docker compose --project-name fibonacci_prod --file docker_composes/docker-compose.yml down"
     },
     {
       "label": "fibonacci->run_on->docker_compose->on_env->prod->logs",
-      "command": "docker compose --project-name fibonacci --file docker_composes/docker-compose.yml logs --timestamps --follow"
+      "command": "docker compose --project-name fibonacci_prod --file docker_composes/docker-compose.yml logs --timestamps --follow"
+    },
+    {
+      "label": "fibonacci->run_on->kubernetes->helpers->logs",
+      "command": "kubectl stern ${input:kubectl_stern_component}"
     },
     {
       "label": "fibonacci->run_on->kubernetes->prerequisites->build_tag_push_images->of_env->prod->to_registry->local",
@@ -122,6 +121,13 @@
     {
       "label": "fibonacci->run_on->kubernetes->using->helm->for_env->dev->test",
       "command": "helm test fibonacci-dev --namespace fibonacci-dev --logs"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "kubectl_stern_component",
+      "type": "promptString",
+      "description": "Enter <kubectl_stern_component>"
     }
   ]
 }
