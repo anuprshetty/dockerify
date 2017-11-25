@@ -8,7 +8,7 @@ services:
     hostname: redis-server
     restart: "no"
     ports:
-      - "6380:6379"
+      - "6379:6379"
 
   app:
     build: ./app
