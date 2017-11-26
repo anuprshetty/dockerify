@@ -15,6 +15,10 @@
 
   "tasks": [
     {
+      "label": "fibonacci->run_on->docker_compose->launch_app",
+      "command": "open -a 'Google Chrome' 'http://localhost:8080/fibonacci/'"
+    },
+    {
       "label": "fibonacci->run_on->docker_compose->on_env->dev->up",
       "command": "docker compose --project-name fibonacci_dev --file docker_composes/docker-compose.dev.yml up --build --detach"
     },
@@ -37,6 +41,10 @@
     {
       "label": "fibonacci->run_on->docker_compose->on_env->prod->logs",
       "command": "docker compose --project-name fibonacci_prod --file docker_composes/docker-compose.yml logs --timestamps --follow"
+    },
+    {
+      "label": "fibonacci->run_on->kubernetes->launch_app",
+      "command": "open -a 'Google Chrome' 'http://localhost:4380/fibonacci/'"
     },
     {
       "label": "fibonacci->run_on->kubernetes->helpers->logs",
