@@ -6,7 +6,7 @@ set -e
 echo -e "Current working directory: $(pwd)"
 echo -e ""
 
-helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace
+helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace --set controller.service.ports.http=4380 --set controller.service.ports.https=43443
 
 echo -e "\n\nSetting up ingress-nginx controller ... WAIT\n"
 

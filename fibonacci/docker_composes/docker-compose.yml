@@ -8,7 +8,7 @@ services:
     hostname: redis-server-prod
     restart: "no"
     ports:
-      - "6380:6379"
+      - "6379:6379"
 
   worker-prod:
     build:
@@ -37,7 +37,7 @@ services:
     # expose:
     #   - 5432
     ports:
-      - "5433:5432"
+      - "5432:5432"
 
   backend-prod:
     build:

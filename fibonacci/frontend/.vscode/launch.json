@@ -15,14 +15,14 @@
       "type": "chrome",
       "request": "launch",
       "name": "fibonacci->attach_debugger_for->frontend_process->running_on->kubernetes->on_env->dev",
-      "url": "http://localhost:80/fibonacci/",
+      "url": "http://localhost:4380/fibonacci/",
       "webRoot": "${workspaceFolder}"
     },
     {
       "type": "chrome",
       "request": "launch",
       "name": "fibonacci->frontend->b2k",
-      "url": "http://localhost:80/fibonacci/",
+      "url": "http://localhost:4380/fibonacci/",
       "webRoot": "${workspaceFolder}",
       // "preLaunchTask": "frontend->b2k->prerequisites", // NOTE: frontend debugging session's preLaunchTask for b2k doesn't work as expected. So run that preLaunchTask manually before launching this debugging session.
       "env": {
