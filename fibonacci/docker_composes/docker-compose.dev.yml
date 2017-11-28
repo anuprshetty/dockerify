@@ -2,7 +2,7 @@ version: "3" # Version of docker-compose
 
 services:
   redis-server-dev:
-    build: ../redis_server
+    build: ../redis_server/
     image: redis-server-image:dev
     container_name: redis-server-container-dev
     hostname: redis-server-dev
@@ -12,8 +12,8 @@ services:
 
   worker-dev:
     build:
-      context: ../worker
-      dockerfile: docker_files/dev.Dockerfile
+      context: ../worker/
+      dockerfile: ./docker_files/dev.Dockerfile
     image: worker-image:dev
     container_name: worker-container-dev
     hostname: worker-dev
@@ -27,7 +27,7 @@ services:
       - redis-server-dev
 
   postgres-server-dev:
-    build: ../postgres_server
+    build: ../postgres_server/
     image: postgres-server-image:dev
     container_name: postgres-server-container-dev
     hostname: postgres-server-dev
@@ -43,8 +43,8 @@ services:
 
   backend-dev:
     build:
-      context: ../backend
-      dockerfile: docker_files/dev.Dockerfile
+      context: ../backend/
+      dockerfile: ./docker_files/dev.Dockerfile
     image: backend-image:dev
     container_name: backend-container-dev
     hostname: backend-dev
@@ -70,8 +70,8 @@ services:
 
   frontend-dev:
     build:
-      context: ../frontend
-      dockerfile: docker_files/dev.Dockerfile
+      context: ../frontend/
+      dockerfile: ./docker_files/dev.Dockerfile
     image: frontend-image:dev
     container_name: frontend-container-dev
     hostname: frontend-dev
@@ -90,13 +90,13 @@ services:
     depends_on:
       - backend-dev
 
-  reverse_proxy-dev:
+  reverse-proxy-dev:
     build:
-      context: ../reverse_proxy
-      dockerfile: docker_files/dev.Dockerfile
+      context: ../reverse_proxy/
+      dockerfile: ./docker_files/dev.Dockerfile
     image: reverse-proxy-image:dev
     container_name: reverse-proxy-container-dev
-    hostname: reverse_proxy-dev
+    hostname: reverse-proxy-dev
     restart: "no"
     environment:
       - BACKEND_HOST=backend-dev

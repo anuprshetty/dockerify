@@ -8,7 +8,7 @@ RUN echo "Current working directory: $(pwd)"
 
 RUN apk update && apk add bash
 
-COPY .. .
+COPY . .
 
 RUN npm install
 

@@ -6,7 +6,7 @@ ARG PROJECT_ROOT_FOLDER=reverse_proxy
 WORKDIR /developer/projects/$PROJECT_ROOT_FOLDER
 RUN echo "Current working directory: $(pwd)"
 
-COPY .. .
+COPY . .
 
 RUN mv /etc/nginx/nginx.conf /etc/nginx/nginx_original.conf
 RUN cp  nginx/nginx.conf /etc/nginx/nginx.conf
