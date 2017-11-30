@@ -1,0 +1,165 @@
+# Refer https://www.devspace.sh/docs/getting-started/introduction
+
+version: v2beta1
+name: fibonacci-devspace
+
+vars:
+  local_image_registry_server: "localhost:4321"
+  cluster_image_registry_server: "host.docker.internal:4321"
+  image_registry_username: "registry_user"
+  app_name: "fibonacci"
+  app_env: "dev"
+
+functions:
+  delete_namespace_function: |-
+    namespace_name=$2
+
+    kubectl delete namespace $namespace_name --ignore-not-found=true --wait=true
+
+  kube_resource_already_exists: |-
+    eval '$@ 2>&1 | tee /dev/tty | grep -q "already exists" >/dev/null'
+
+  postgres_server_secret_function: |-
+    set -e
+
+    kube_command="kubectl create secret --namespace $app_name-$app_env generic postgres-server-secret --from-literal=POSTGRES_USER=backend --from-literal=POSTGRES_PASSWORD=postgres --from-literal=POSTGRES_DB=fib"
+
+    if kube_resource_already_exists "$kube_command"; then
+      echo -e "Ignoring above error ...\n"
+    fi
+
+  docker_local_registry_secret_function: |-
+    set -e
+
+    kube_command="kubectl create secret --namespace $app_name-$app_env docker-registry docker-local-registry-secret --docker-server=host.docker.internal:4321 --docker-username=registry_user --docker-password=registry_pass --docker-email=registry_user@email.com"
+
+    if kube_resource_already_exists "$kube_command"; then
+      echo -e "Ignoring above error ...\n"
+    fi
+
+pipelines:
+  dev: |-
+    build_images redis-server worker postgres-server backend frontend
+    postgres_server_secret_function
+    docker_local_registry_secret_function
+    create_deployments fibonacci-dev-helm
+    start_dev redis-server worker postgres-server backend frontend
+
+  purge: |-
+    stop_dev redis-server worker postgres-server backend frontend
+    purge_deployments fibonacci-dev-helm
+    delete_namespace_function --namespace ${app_name}-${app_env}
+
+images:
+  # Automatic Skip Push:
+  # - DevSpace will automatically try to skip pushing images if it detects that you are working with a localhost Kubernetes cluster.
+  # - This is only possible if DevSpace is able to build the image with the Docker daemon that powers your Kubernetes cluster.
+  # - Unless you are working in a localhost cluster, you will need to push your images to an image registry to be able to use them inside a Kubernetes cluster.
+  redis-server:
+    image: ${cluster_image_registry_server}/${image_registry_username}/${app_name}-redis-server-image
+    tags: ["${app_env}"]
+    context: ./redis_server/
+    dockerfile: ./redis_server/Dockerfile
+    skipPush: false
+    createPullSecret: false
+  worker:
+    image: ${cluster_image_registry_server}/${image_registry_username}/${app_name}-worker-image
+    tags: ["${app_env}"]
+    context: ./worker/
+    dockerfile: ./worker/docker_files/dev.Dockerfile
+    skipPush: false
+    createPullSecret: false
+  postgres-server:
+    image: ${cluster_image_registry_server}/${image_registry_username}/${app_name}-postgres-server-image
+    tags: ["${app_env}"]
+    context: ./postgres_server/
+    dockerfile: ./postgres_server/Dockerfile
+    skipPush: false
+    createPullSecret: false
+  backend:
+    image: ${cluster_image_registry_server}/${image_registry_username}/${app_name}-backend-image
+    tags: ["${app_env}"]
+    context: ./backend/
+    dockerfile: ./backend/docker_files/dev.Dockerfile
+    skipPush: false
+    createPullSecret: false
+  frontend:
+    image: ${cluster_image_registry_server}/${image_registry_username}/${app_name}-frontend-image
+    tags: ["${app_env}"]
+    context: ./frontend/
+    dockerfile: ./frontend/docker_files/dev.Dockerfile
+    skipPush: false
+    createPullSecret: false
+
+deployments:
+  fibonacci-dev-helm:
+    namespace: ${app_name}-${app_env}
+    updateImageTags: false
+    helm:
+      releaseName: ${app_name}-${app_env}
+      chart:
+        name: ./helm/fibonacci/
+      valuesFiles:
+        - ./helm/fibonacci/values.yaml
+        - ./helm/fibonacci/values-dev-env.yaml
+        - ./helm/fibonacci/values-local-registry.yaml
+      displayOutput: true
+      upgradeArgs: ["--install", "--wait", "--wait-for-jobs"]
+      templateArgs: ["--debug"]
+      disableDependencyUpdate: false
+
+dev:
+  # each dev section should uniquely identify a container in a pod in a namespace in a cluster.
+  # 4 ways we can uniquely identify a container:
+  # Refer https://www.devspace.sh/docs/configuration/dev/selectors/
+  # 1. imageSelector field
+  # 2. labelSelector field
+  # 3. (labelSelector + container) fields
+  # 4. (labelSelector + containers) fields
+  redis-server:
+    namespace: ${app_name}-${app_env}
+    imageSelector: ${cluster_image_registry_server}/${image_registry_username}/${app_name}-redis-server-image:${app_env}
+    # labelSelector:
+    #   ${app_name}: redis-server
+    # container: redis-server-container
+    ports:
+      - port: "6379:6379"
+  worker:
+    namespace: ${app_name}-${app_env}
+    imageSelector: ${cluster_image_registry_server}/${image_registry_username}/${app_name}-worker-image:${app_env}
+    # labelSelector:
+    #   ${app_name}: worker
+    # container: worker-container
+    sync:
+      - path: ./worker/index.js:/developer/projects/worker/index.js
+  postgres-server:
+    namespace: ${app_name}-${app_env}
+    imageSelector: ${cluster_image_registry_server}/${image_registry_username}/${app_name}-postgres-server-image:${app_env}
+    # labelSelector:
+    #   ${app_name}: postgres-server
+    # container: postgres-server-container
+    ports:
+      - port: "5432:5432"
+  backend:
+    namespace: ${app_name}-${app_env}
+    imageSelector: ${cluster_image_registry_server}/${image_registry_username}/${app_name}-backend-image:${app_env}
+    # labelSelector:
+    #   ${app_name}: backend
+    # container: backend-container
+    ports:
+      - port: "5000:5000"
+    sync:
+      - path: ./backend/index.js:/developer/projects/backend/index.js
+  frontend:
+    namespace: ${app_name}-${app_env}
+    imageSelector: ${cluster_image_registry_server}/${image_registry_username}/${app_name}-frontend-image:${app_env}
+    # labelSelector:
+    #   ${app_name}: frontend
+    # container: frontend-container
+    ports:
+      - port: "3000:3000"
+    sync:
+      - path: ./frontend/public/:/developer/projects/frontend/public/
+      - path: ./frontend/src/:/developer/projects/frontend/src/
+    open:
+      - url: http://localhost:4380/fibonacci/

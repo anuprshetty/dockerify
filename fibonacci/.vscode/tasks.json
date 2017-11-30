@@ -64,11 +64,11 @@
     },
     {
       "label": "fibonacci->run_on->kubernetes->prerequisites->only_build_tag_images->of_env->prod->for_registry->local",
-      "command": "chmod 755 scripts/compose_registry_push.sh && ./scripts/compose_registry_push.sh --docker-compose-file docker_composes/docker-compose.yml --registry-server localhost:4321 --registry-username registry_user --project-name ${workspaceFolderBasename} --image-tag prod --only-build-tag true"
+      "command": "chmod 755 scripts/compose_registry_push.sh && ./scripts/compose_registry_push.sh --docker-compose-file docker_composes/docker-compose.yml --registry-server host.docker.internal:4321 --registry-username registry_user --project-name ${workspaceFolderBasename} --image-tag prod --only-build-tag true"
     },
     {
       "label": "fibonacci->run_on->kubernetes->prerequisites->only_build_tag_images->of_env->dev->for_registry->local",
-      "command": "chmod 755 scripts/compose_registry_push.sh && ./scripts/compose_registry_push.sh --docker-compose-file docker_composes/docker-compose.dev.yml --registry-server localhost:4321 --registry-username registry_user --project-name ${workspaceFolderBasename} --image-tag dev --only-build-tag true"
+      "command": "chmod 755 scripts/compose_registry_push.sh && ./scripts/compose_registry_push.sh --docker-compose-file docker_composes/docker-compose.dev.yml --registry-server host.docker.internal:4321 --registry-username registry_user --project-name ${workspaceFolderBasename} --image-tag dev --only-build-tag true"
     },
     {
       "label": "fibonacci->run_on->kubernetes->prerequisites->only_build_tag_images->of_env->prod->for_registry->docker_hub",
@@ -81,6 +81,20 @@
     {
       "label": "fibonacci->run_on->kubernetes->prerequisites->ingress_nginx_controller->remove",
       "command": "chmod 755 ./scripts/ingress_nginx_controller/remove.sh && ./scripts/ingress_nginx_controller/remove.sh"
+    },
+    {
+      "label": "fibonacci->run_on->kubernetes->using->devspace->dev_mode",
+      "command": "devspace dev --kube-context docker-desktop --namespace fibonacci-dev --debug"
+    },
+    {
+      "label": "fibonacci->run_on->kubernetes->using->devspace->cleanup->cluster_resources",
+      "command": "devspace purge --kube-context docker-desktop --namespace fibonacci-dev --debug",
+      "detail": "Deletes the deployed kubernetes resources"
+    },
+    {
+      "label": "fibonacci->run_on->kubernetes->using->devspace->cleanup->local_images",
+      "command": "devspace cleanup images --debug",
+      "detail": "Deletes all locally created docker images from docker"
     },
     {
       "label": "fibonacci->run_on->kubernetes->using->manifests->for_env->prod->from_registry->docker_hub->apply",
