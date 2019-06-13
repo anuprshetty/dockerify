@@ -1,0 +1,97 @@
+# Render Platform Deployment Config:
+# - Dashboard: https://dashboard.render.com/
+# - Refer https://docs.render.com/docs/infrastructure-as-code
+# - Refer https://docs.render.com/docs/blueprint-spec
+
+services:
+  - name: fibonacci-redis-server
+    type: pserv
+    rootDir: ./redis_server/
+    runtime: docker
+    autoDeploy: false
+
+  - name: fibonacci-worker
+    type: worker
+    rootDir: ./worker/
+    runtime: docker
+    dockerContext: ./
+    dockerfilePath: ./docker_files/Dockerfile
+    autoDeploy: false
+    envVars:
+      - key: REDIS_SERVER_HOST
+        value: fibonacci-redis-server
+      - key: REDIS_SERVER_PORT
+        value: 6379
+
+  - name: fibonacci-postgres-server
+    type: pserv
+    rootDir: ./postgres_server/
+    runtime: docker
+    autoDeploy: false
+    envVars:
+      - key: POSTGRES_USER
+        value: backend
+      - key: POSTGRES_PASSWORD
+        value: postgres
+      - key: POSTGRES_DB
+        value: fib
+
+  - name: fibonacci-backend
+    type: pserv
+    rootDir: ./backend/
+    runtime: docker
+    dockerContext: ./
+    dockerfilePath: ./docker_files/Dockerfile
+    autoDeploy: false
+    envVars:
+      - key: APP_PORT
+        value: 5000
+
+      - key: POSTGRES_HOST
+        value: fibonacci-postgres-server
+      - key: POSTGRES_PORT
+        value: 5432
+      - key: POSTGRES_USER
+        value: backend
+      - key: POSTGRES_PASSWORD
+        value: postgres
+      - key: POSTGRES_DB
+        value: fib
+
+      - key: REDIS_SERVER_HOST
+        value: fibonacci-redis-server
+      - key: REDIS_SERVER_PORT
+        value: 6379
+
+  - name: fibonacci-frontend
+    type: pserv
+    rootDir: ./frontend/
+    runtime: docker
+    dockerContext: ./
+    dockerfilePath: ./docker_files/Dockerfile
+    autoDeploy: false
+    envVars:
+      - key: BACKEND_HOST
+        value: fibonacci-backend
+      - key: BACKEND_PORT
+        value: 5000
+
+  - name: fibonacci-reverse-proxy
+    type: web
+    rootDir: ./reverse_proxy/
+    runtime: docker
+    dockerContext: ./
+    dockerfilePath: ./docker_files/Dockerfile
+    autoDeploy: false
+    domains:
+      - fibonacci.render.com
+    envVars:
+      - key: BACKEND_HOST
+        value: fibonacci-backend
+      - key: BACKEND_PORT
+        value: 5000
+
+      - key: FRONTEND_HOST
+        value: fibonacci-frontend
+      - key: FRONTEND_PORT
+        value: 3000
