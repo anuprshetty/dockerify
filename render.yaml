@@ -1,3 +1,5 @@
+# NOTE: This render.yaml file belongs to fibonacci project.
+
 # Render Platform Deployment Config:
 # - Dashboard: https://dashboard.render.com/
 # - Refer https://docs.render.com/docs/infrastructure-as-code
@@ -6,13 +8,13 @@
 services:
   - name: fibonacci-redis-server
     type: pserv
-    rootDir: ./redis_server/
+    rootDir: ./fibonacci/redis_server/
     runtime: docker
     autoDeploy: false
 
   - name: fibonacci-worker
     type: worker
-    rootDir: ./worker/
+    rootDir: ./fibonacci/worker/
     runtime: docker
     dockerContext: ./
     dockerfilePath: ./docker_files/Dockerfile
@@ -25,7 +27,7 @@ services:
 
   - name: fibonacci-postgres-server
     type: pserv
-    rootDir: ./postgres_server/
+    rootDir: ./fibonacci/postgres_server/
     runtime: docker
     autoDeploy: false
     envVars:
@@ -38,7 +40,7 @@ services:
 
   - name: fibonacci-backend
     type: pserv
-    rootDir: ./backend/
+    rootDir: ./fibonacci/backend/
     runtime: docker
     dockerContext: ./
     dockerfilePath: ./docker_files/Dockerfile
@@ -65,7 +67,7 @@ services:
 
   - name: fibonacci-frontend
     type: pserv
-    rootDir: ./frontend/
+    rootDir: ./fibonacci/frontend/
     runtime: docker
     dockerContext: ./
     dockerfilePath: ./docker_files/Dockerfile
@@ -78,7 +80,7 @@ services:
 
   - name: fibonacci-reverse-proxy
     type: web
-    rootDir: ./reverse_proxy/
+    rootDir: ./fibonacci/reverse_proxy/
     runtime: docker
     dockerContext: ./
     dockerfilePath: ./docker_files/Dockerfile
