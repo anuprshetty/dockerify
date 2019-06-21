@@ -27,7 +27,7 @@ RUN echo "Current working directory: $(pwd)"
 COPY --from=builder /developer/projects/frontend/build/ ./build/
 COPY --from=builder /developer/projects/frontend/scripts/ ./scripts/
 
-COPY ../nginx.conf ./nginx.conf
+COPY ./nginx.conf ./nginx.conf
 
 RUN mv /etc/nginx/nginx.conf /etc/nginx/nginx_original.conf
 RUN cp nginx.conf /etc/nginx/nginx.conf
