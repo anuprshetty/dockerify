@@ -1,5 +1,5 @@
 # Use an existing docker image as base
-FROM alpine
+FROM alpine:3.19.1
 
 ARG PROJECT_ROOT_FOLDER=redis_server
 
@@ -9,7 +9,7 @@ RUN echo "Current working directory: $(pwd)"
 
 # Download and install the dependencies
 RUN apk add --update gcc
-RUN apk add --update redis=7.0.13-r0
+RUN apk add --update redis=7.2.4-r0
 
 COPY . .
 
