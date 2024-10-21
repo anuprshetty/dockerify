@@ -1,3 +1,5 @@
+# Flow: deployments -> replicasets -> pods -> containers (Everything below deployments layer will be handled automatically by Kubernetes)
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
